@@ -1,14 +1,14 @@
-val web3jVersion = "4.5.17"
+val web3jVersion = "4.9.0"
 
 cancelable := true
 
 // Travis can be a PITA
 crossScalaVersions := { if (new java.io.File("/home/travis").exists) Seq("2.13.1") else Seq("2.12.10", "2.13.1") }
 
-fork in Test := true
+Test / fork := true
 
 // define the statements initially evaluated when entering 'console', 'console-quick', but not 'console-project'
-initialCommands in console := """import scala.sys.process._
+console / initialCommands := """import scala.sys.process._
                                 |import java.math.BigInteger
                                 |import java.util.concurrent.Future
                                 |import org.web3j.protocol._
@@ -37,7 +37,7 @@ libraryDependencies ++= Seq(
 //  "org.web3j"              %  "quorum"                  % "0.7.0"      withSources(), // integration with JP Morgan's Quorum
   "org.web3j"              %  "rlp"                     % web3jVersion withSources(), // Recursive Length Prefix (RLP) encoders
   "org.web3j"              %  "utils"                   % web3jVersion withSources(), // Minimal set of utility classes
-  "org.web3j"              %  "web3j-maven-plugin"      % "0.3.5"      withSources(), // Create Java classes from solidity contract files
+  "org.web3j"              %  "web3j-maven-plugin"      % "4.8.7"      withSources(), // Create Java classes from solidity contract files
   //
   "org.scala-lang.modules" %% "scala-java8-compat"      % "0.9.0",
   "ch.qos.logback"         %  "logback-classic"         % "1.2.3",
@@ -63,20 +63,20 @@ logLevel := Level.Warn
 
 // Only show warnings and errors on the screen for compilations.
 // This applies to both test:compile and compile and is Info by default
-logLevel in compile := Level.Warn
+compile / logLevel := Level.Warn
 
 // Level.INFO is needed to see detailed output when running tests
-logLevel in test := Level.Info
+test / logLevel := Level.Info
 
 name := "web3j-scala"
 
 organization := "com.micronautics"
 
-resolvers ++= Seq(
-  "Ethereum Maven" at "https://dl.bintray.com/ethereum/maven/",
-  "bintray"        at "https://bintray.com/web3j/maven/org.web3j",
-  //"Snapshots"      at "https://oss.sonatype.org/content/repositories/snapshots"
-)
+//resolvers ++= Seq(
+//  "Ethereum Maven" at "https://dl.bintray.com/ethereum/maven/",
+//  "bintray"        at "https://bintray.com/web3j/maven/org.web3j",
+//  //"Snapshots"      at "https://oss.sonatype.org/content/repositories/snapshots"
+//)
 
 scalacOptions ++= Seq( // From https://tpolecat.github.io/2017/04/25/scalac-flags.html
   "-deprecation",                      // Emit warning and location for usages of deprecated APIs.
@@ -106,9 +106,9 @@ scalacOptions ++= Seq( // From https://tpolecat.github.io/2017/04/25/scalac-flag
 )
 
 // The REPL can’t cope with -Ywarn-unused:imports or -Xfatal-warnings so turn them off for the console
-scalacOptions in (Compile, console) --= Seq("-Ywarn-unused:imports", "-Xfatal-warnings")
+Compile / console / scalacOptions --= Seq("-Ywarn-unused:imports", "-Xfatal-warnings")
 
-scalacOptions in (Compile, doc) ++= baseDirectory.map { bd: File =>
+Compile / doc / scalacOptions ++= baseDirectory.map { bd: File =>
   Seq[String](
      "-sourcepath", bd.getAbsolutePath,
      "-doc-source-url", "https://github.com/mslinn/web3j-scala/tree/master€{FILE_PATH}.scala"
@@ -117,7 +117,7 @@ scalacOptions in (Compile, doc) ++= baseDirectory.map { bd: File =>
 
 scalaVersion := "2.13.1"
 
-unmanagedSourceDirectories in Test ++= Seq(
+Test / unmanagedSourceDirectories ++= Seq(
   baseDirectory.value / "abiWrapper",
   baseDirectory.value / "demo"
 )
