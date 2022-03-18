@@ -115,7 +115,7 @@ Compile / doc / scalacOptions ++= baseDirectory.map { bd: File =>
   )
 }.value
 
-scalaVersion := "2.13.1"
+scalaVersion := "2.12.10"
 
 Test / unmanagedSourceDirectories ++= Seq(
   baseDirectory.value / "abiWrapper",
